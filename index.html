@@ -25,7 +25,12 @@
       color: var(--ink);
       min-height: 100vh;
     }
-
+<!-- CURTAIN -->
+<div id="curtain">
+  <div id="curtain-left"></div>
+  <div id="curtain-right"></div>
+  <div id="curtain-title">Yor1e</div>
+</div>
     /* ── NAV ─────────────────────────────────────────── */
     nav {
       display: flex;
@@ -372,6 +377,40 @@
       color: var(--rule);
       text-transform: uppercase;
     }
+    #curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#curtain-left, #curtain-right {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  background: #1a1208;
+  transition: transform 1.4s cubic-bezier(0.76, 0, 0.24, 1);
+}
+#curtain-left  { left: 0; }
+#curtain-right { right: 0; }
+#curtain-title {
+  position: relative;
+  z-index: 1;
+  font-size: 4rem;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  color: #c8b89a;
+  font-family: 'Georgia', serif;
+  transition: opacity 0.4s ease;
+  user-select: none;
+}
+#curtain.open #curtain-left  { transform: translateX(-100%); }
+#curtain.open #curtain-right { transform: translateX(100%); }
+#curtain.open #curtain-title { opacity: 0; }
+#curtain.done { display: none; }
   </style>
 </head>
 <body>
@@ -532,46 +571,46 @@
     {
       src:   "https://res.cloudinary.com/dzwusggvj/image/upload/v1781755110/78503BC5-C5F6-4AFB-8A46-F04033D853CF_1_105_c_gpsqyh.jpg",
       cat:   "portrait",
-      label: "001.jpg"
+      label: "Monster building - LEICA Q1"
     },
     {
       src:   "https://res.cloudinary.com/dzwusggvj/image/upload/v1781759380/7CE23F8B-AE1B-4515-91F4-796016E0C9CA_1_105_c_rmyauu.jpg",
       cat:   "portrait",
-      label: "002.jpg"
+      label: "ZZZ - LEICA Q1"
     },
     {
       src:   "https://res.cloudinary.com/dzwusggvj/image/upload/v1781759804/0769F990-7A58-4F4A-BAB2-C3A29CEECC61_1_105_c_o0fjkw.jpg",
       cat:   "portrait",
-      label: "003.jpg"
+      label: "Victoria harbor - FUJI X100VI"
     },
 
     /* ── LANDSCAPE ── */
     {
       src:   "https://res.cloudinary.com/dzwusggvj/image/upload/v1781754622/CBA3BCEE-2A04-4B7A-A4E1-AD9FE705C3F5_1_105_c_qhhajs.jpg",
       cat:   "landscape",
-      label: "001.jpg"
+      label: "WuKang building - LEICA Q1"
     },
     {
       src:   "https://res.cloudinary.com/dzwusggvj/image/upload/v1781755124/FF34B4EB-629B-478E-964E-6012DEFC2177_1_105_c_owrprm.jpg",
       cat:   "landscape",
-      label: "002.jpg"
+      label: "Kennedy town - LEICA Q1"
     },
     {
       src:   "https://res.cloudinary.com/dzwusggvj/image/upload/v1781755065/E5EF65BE-BE54-4276-A293-ED9186D24182_1_102_o_shc3pz.jpg",
       cat:   "landscape",
-      label: "003.jpg"
+      label: "FUJI X100VI"
     },
 
     /* ── AUTOMOTIVE ── */
     {
       src:   "https://res.cloudinary.com/dzwusggvj/image/upload/v1781755153/F7F7231D-334D-4EE1-BA2E-5CD393FF2C81_1_105_c_cwvjgg.jpg",
       cat:   "automotive",
-      label: "001.jpg"
+      label: "911SC - LEICA Q1"
     },
     {
       src:   "https://res.cloudinary.com/dzwusggvj/image/upload/v1781759375/7FBF94DB-177E-4D34-A1B9-60E5CA9AFD35_1_105_c_ggdhbi.jpg",
       cat:   "automotive",
-      label: "002.jpg"
+      label: "C63 - LEICA Q1"
     },
 
   ];
@@ -679,6 +718,11 @@
   /* ── INIT ───────────────────────────────────────────── */
   document.getElementById('yr').textContent = new Date().getFullYear();
   renderGrid('all');
+  const curtain = document.getElementById('curtain');
+curtain.addEventListener('click', () => {
+  curtain.classList.add('open');
+  setTimeout(() => curtain.classList.add('done'), 1500);
+});
 </script>
 </body>
 </html>
