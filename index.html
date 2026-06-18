@@ -79,8 +79,8 @@
     }
 
     /* ── PAGES ───────────────────────────────────────── */
-    .page { display: none; }
-    .page.active { display: block; }
+    .page { display: block; visibility: hidden; height: 0; overflow: hidden; pointer-events: none; }
+    .page.active { visibility: visible; height: auto; overflow: visible; pointer-events: auto; }
 
     /* ── PORTFOLIO PAGE ──────────────────────────────── */
     #page-portfolio { padding: 0 3rem 5rem; max-width: 1200px; margin: 0 auto; }
@@ -678,7 +678,7 @@
 
   /* ── INIT ───────────────────────────────────────────── */
   document.getElementById('yr').textContent = new Date().getFullYear();
-  requestAnimationFrame(() => renderGrid('all'));
+  renderGrid('all');
 </script>
 </body>
 </html>
