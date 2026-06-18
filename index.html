@@ -8,13 +8,13 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg:        #f5f0e8;
-      --ink:       #2a2016;
-      --muted:     #6b5a3e;
-      --faint:     #8a7254;
-      --rule:      #c8b89a;
-      --film:      sepia(18%) contrast(1.06) brightness(0.96) saturate(0.82);
-      --film-lb:   sepia(14%) contrast(1.08) brightness(0.95) saturate(0.80);
+      --bg:      #f5f0e8;
+      --ink:     #2a2016;
+      --muted:   #6b5a3e;
+      --faint:   #8a7254;
+      --rule:    #c8b89a;
+      --film:    sepia(18%) contrast(1.06) brightness(0.96) saturate(0.82);
+      --film-lb: sepia(14%) contrast(1.08) brightness(0.95) saturate(0.80);
     }
 
     html { scroll-behavior: smooth; }
@@ -25,12 +25,43 @@
       color: var(--ink);
       min-height: 100vh;
     }
-<!-- CURTAIN -->
-<div id="curtain">
-  <div id="curtain-left"></div>
-  <div id="curtain-right"></div>
-  <div id="curtain-title">Yor1e</div>
-</div>
+
+    /* ── CURTAIN ─────────────────────────────────────── */
+    #curtain {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #curtain-left, #curtain-right {
+      position: absolute;
+      top: 0;
+      width: 50%;
+      height: 100%;
+      background: #1a1208;
+      transition: transform 1.4s cubic-bezier(0.76, 0, 0.24, 1);
+    }
+    #curtain-left  { left: 0; }
+    #curtain-right { right: 0; }
+    #curtain-title {
+      position: relative;
+      z-index: 1;
+      font-size: 4rem;
+      font-weight: 400;
+      letter-spacing: 0.3em;
+      color: #c8b89a;
+      font-family: 'Georgia', serif;
+      transition: opacity 0.4s ease;
+      user-select: none;
+    }
+    #curtain.open #curtain-left  { transform: translateX(-100%); }
+    #curtain.open #curtain-right { transform: translateX(100%); }
+    #curtain.open #curtain-title { opacity: 0; }
+    #curtain.done { display: none; }
+
     /* ── NAV ─────────────────────────────────────────── */
     nav {
       display: flex;
@@ -43,7 +74,6 @@
       top: 0;
       z-index: 200;
     }
-
     .logo {
       display: inline-flex;
       align-items: baseline;
@@ -54,13 +84,11 @@
       text-decoration: none;
       cursor: pointer;
     }
-    /* The "1" sits optically with the caps by nudging it down slightly */
     .logo .one {
       font-size: 1.3rem;
       position: relative;
       top: 0;
     }
-
     .nav-links {
       display: flex;
       gap: 2.2rem;
@@ -172,13 +200,18 @@
     }
     .grid-item img {
       width: 100%;
+      height: auto;
       display: block;
+      aspect-ratio: 3 / 4;
+      object-fit: cover;
       filter: var(--film);
-      transition: transform 0.42s ease, opacity 0.3s ease;
+      transition: transform 0.42s ease, opacity 0.35s ease;
       opacity: 0;
     }
     .grid-item img.loaded {
       opacity: 1;
+      aspect-ratio: auto;
+      object-fit: unset;
     }
     .grid-item:hover img { transform: scale(1.04); }
 
@@ -196,20 +229,6 @@
       font-size: 0.72rem;
       letter-spacing: 0.12em;
     }
-
-    /* ── UPLOAD ──────────────────────────────────────── */
-    .upload-zone {
-      border: 1px dashed var(--rule);
-      padding: 2rem;
-      text-align: center;
-      margin-top: 1.6rem;
-      cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
-    }
-    .upload-zone:hover { border-color: var(--ink); background: rgba(200,184,154,0.08); }
-    .upload-zone .u-plus { font-size: 1.8rem; color: var(--rule); line-height: 1; }
-    .upload-zone p { color: var(--faint); font-size: 0.78rem; letter-spacing: 0.06em; margin-top: 0.4rem; }
-    .upload-zone input { display: none; }
 
     /* ── LIGHTBOX ────────────────────────────────────── */
     .lightbox {
@@ -377,43 +396,16 @@
       color: var(--rule);
       text-transform: uppercase;
     }
-    #curtain {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-#curtain-left, #curtain-right {
-  position: absolute;
-  top: 0;
-  width: 50%;
-  height: 100%;
-  background: #1a1208;
-  transition: transform 1.4s cubic-bezier(0.76, 0, 0.24, 1);
-}
-#curtain-left  { left: 0; }
-#curtain-right { right: 0; }
-#curtain-title {
-  position: relative;
-  z-index: 1;
-  font-size: 4rem;
-  font-weight: 400;
-  letter-spacing: 0.3em;
-  color: #c8b89a;
-  font-family: 'Georgia', serif;
-  transition: opacity 0.4s ease;
-  user-select: none;
-}
-#curtain.open #curtain-left  { transform: translateX(-100%); }
-#curtain.open #curtain-right { transform: translateX(100%); }
-#curtain.open #curtain-title { opacity: 0; }
-#curtain.done { display: none; }
   </style>
 </head>
 <body>
+
+<!-- CURTAIN -->
+<div id="curtain">
+  <div id="curtain-left"></div>
+  <div id="curtain-right"></div>
+  <div id="curtain-title">Yor1e</div>
+</div>
 
 <!-- NAV -->
 <nav>
@@ -427,58 +419,38 @@
   </ul>
 </nav>
 
-
-<!-- ═══════════════════════════════════════════════════
-     PORTFOLIO PAGE
-════════════════════════════════════════════════════ -->
+<!-- PORTFOLIO PAGE -->
 <div class="page active" id="page-portfolio">
   <div id="page-portfolio-inner">
     <div class="hero">
       <h1>YOR<span class="one">1</span>E</h1>
-      <p class="hero-sub">Photography &nbsp;&middot;&nbsp; Portrait &nbsp;&middot;&nbsp; Landscape &nbsp;&middot;&nbsp; Automotive</p>
+      <p class="hero-sub">Photography &nbsp;&middot;&nbsp; Portrait &nbsp;&middot;&nbsp; Landscape &nbsp;&middot;&nbsp; Automotive &nbsp;&middot;&nbsp; Street</p>
     </div>
-
     <div class="film-strip"></div>
-
     <div class="filters">
       <button class="filter-btn active" onclick="filter('all', this)">All</button>
       <button class="filter-btn"        onclick="filter('portrait', this)">Portrait</button>
       <button class="filter-btn"        onclick="filter('landscape', this)">Landscape</button>
       <button class="filter-btn"        onclick="filter('automotive', this)">Automotive</button>
+      <button class="filter-btn"        onclick="filter('street', this)">Street</button>
     </div>
-
     <div class="grid" id="photo-grid"></div>
-
     <div class="film-strip" style="margin-top:2.5rem"></div>
   </div>
 </div>
 
-
-<!-- ═══════════════════════════════════════════════════
-     ABOUT PAGE
-════════════════════════════════════════════════════ -->
+<!-- ABOUT PAGE -->
 <div class="page" id="page-about">
   <div class="about-grid">
-
-    <!--
-      ABOUT PHOTO
-      Replace the src below with your own photo URL.
-      Example: src="photos/about/me.jpg"
-    -->
     <div>
       <img
         class="about-photo"
-        src="https://images.unsplash.com/photo-1516726817505-f5ed825624d8?w=600&q=80&auto=format"
+        src="photos/about/me.jpg"
         alt="YOR1E — photographer portrait"
       >
     </div>
-
     <div class="about-text">
       <h2>YOR<span class="one">1</span>E</h2>
-
-      <!--
-        Edit the paragraphs below with your own bio.
-      -->
       <p>
         I shoot with a film eye. Whether it's the quiet tension in a portrait
         or the stillness of a landscape at golden hour — I look for moments
@@ -491,23 +463,19 @@
       <p>
         Based in —— &nbsp;/&nbsp; Available worldwide.
       </p>
-
       <div class="tags">
         <span class="tag">Portrait</span>
         <span class="tag">Landscape</span>
         <span class="tag">Automotive</span>
+        <span class="tag">Street</span>
         <span class="tag">Film look</span>
         <span class="tag">Natural light</span>
       </div>
     </div>
-
   </div>
 </div>
 
-
-<!-- ═══════════════════════════════════════════════════
-     CONTACT PAGE
-════════════════════════════════════════════════════ -->
+<!-- CONTACT PAGE -->
 <div class="page" id="page-contact">
   <div class="contact-inner">
     <h2>Get in touch</h2>
@@ -516,19 +484,12 @@
       Feel free to reach out through any of the channels below.
     </p>
     <div class="contact-links">
-      <!--
-        Replace href="#" with your real links.
-        Email:     href="mailto:you@email.com"
-        Instagram: href="https://instagram.com/yourhandle"
-        WeChat:    You can link to a QR code image or a page.
-      -->
       <a class="contact-link" href="mailto:you@email.com">&#9993;&nbsp; Email</a>
       <a class="contact-link" href="https://instagram.com/" target="_blank" rel="noopener">&#128247;&nbsp; Instagram</a>
       <a class="contact-link" href="#">&#128172;&nbsp; WeChat</a>
     </div>
   </div>
 </div>
-
 
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox" onclick="lbBgClick(event)">
@@ -541,87 +502,98 @@
   </div>
 </div>
 
-
 <footer>
   &copy; <span id="yr"></span> &nbsp; YOR1E &nbsp; — &nbsp; All rights reserved
 </footer>
 
-
 <script>
-  /* ── DATA ─────────────────────────────────────────────
-     HOW TO ADD YOUR OWN PHOTOS
-     ─────────────────────────────────────────────────────
-     Each photo is one object in the array below.
-     Fields:
-       src   — the image URL.
-               · Local file:   "photos/portrait/001.jpg"
-               · Cloudinary:   "https://res.cloudinary.com/YOURNAME/image/upload/v.../001.jpg"
-               · ImgBB / etc.: paste the direct image link
-       cat   — category: "portrait" | "landscape" | "automotive"
-       label — text shown on hover and in the lightbox caption
-
-     ADDING A PHOTO: copy one of the objects, paste it at the
-     end of the array (before the closing ]), change the values.
-
-     REMOVING A PHOTO: delete the whole { … } block for it.
-  ────────────────────────────────────────────────────── */
   const photos = [
 
     /* ── PORTRAIT ── */
     {
-      src:   "https://res.cloudinary.com/dzwusggvj/image/upload/v1781755110/78503BC5-C5F6-4AFB-8A46-F04033D853CF_1_105_c_gpsqyh.jpg",
+      src:   "photos/portrait/001.jpg",
       cat:   "portrait",
-      label: "Monster building - LEICA Q1"
+      label: "Victoria Harbour — FUJI X100VI"
     },
     {
-      src:   "https://res.cloudinary.com/dzwusggvj/image/upload/v1781759380/7CE23F8B-AE1B-4515-91F4-796016E0C9CA_1_105_c_rmyauu.jpg",
+      src:   "photos/portrait/002.jpg",
       cat:   "portrait",
-      label: "ZZZ - LEICA Q1"
+      label: "Shanghai Street — LEICA Q1"
     },
     {
-      src:   "https://res.cloudinary.com/dzwusggvj/image/upload/v1781759804/0769F990-7A58-4F4A-BAB2-C3A29CEECC61_1_105_c_o0fjkw.jpg",
+      src:   "photos/portrait/003.jpg",
       cat:   "portrait",
-      label: "Victoria harbor - FUJI X100VI"
+      label: "Arcade — LEICA Q1"
+    },
+    {
+      src:   "photos/portrait/004.jpg",
+      cat:   "portrait",
+      label: "Monster Building — LEICA Q1"
     },
 
     /* ── LANDSCAPE ── */
     {
-      src:   "https://res.cloudinary.com/dzwusggvj/image/upload/v1781754622/CBA3BCEE-2A04-4B7A-A4E1-AD9FE705C3F5_1_105_c_qhhajs.jpg",
+      src:   "photos/landscape/001.jpg",
       cat:   "landscape",
-      label: "WuKang building - LEICA Q1"
+      label: "Science Center — FUJI X100VI"
     },
     {
-      src:   "https://res.cloudinary.com/dzwusggvj/image/upload/v1781755124/FF34B4EB-629B-478E-964E-6012DEFC2177_1_105_c_owrprm.jpg",
+      src:   "photos/landscape/002.jpg",
       cat:   "landscape",
-      label: "Kennedy town - LEICA Q1"
+      label: "Hong Kong Jockey Club — LEICA Q1"
     },
     {
-      src:   "https://res.cloudinary.com/dzwusggvj/image/upload/v1781755065/E5EF65BE-BE54-4276-A293-ED9186D24182_1_102_o_shc3pz.jpg",
+      src:   "photos/landscape/003.jpg",
       cat:   "landscape",
-      label: "FUJI X100VI"
+      label: "Coastline — FUJI X100VI"
+    },
+    {
+      src:   "photos/landscape/004.jpg",
+      cat:   "landscape",
+      label: "Lakeside — LEICA Q1"
+    },
+    {
+      src:   "photos/landscape/005.jpg",
+      cat:   "landscape",
+      label: "Cathedral — LEICA Q1"
     },
 
     /* ── AUTOMOTIVE ── */
     {
-      src:   "https://res.cloudinary.com/dzwusggvj/image/upload/v1781755153/F7F7231D-334D-4EE1-BA2E-5CD393FF2C81_1_105_c_cwvjgg.jpg",
+      src:   "photos/automotive/001.jpg",
       cat:   "automotive",
-      label: "911SC - LEICA Q1"
+      label: "Porsche 911 — LEICA Q1"
+    },
+
+    /* ── STREET ── */
+    {
+      src:   "photos/street/001.jpg",
+      cat:   "street",
+      label: "HK Bus Street — FUJI X100VI"
     },
     {
-      src:   "https://res.cloudinary.com/dzwusggvj/image/upload/v1781759375/7FBF94DB-177E-4D34-A1B9-60E5CA9AFD35_1_105_c_ggdhbi.jpg",
-      cat:   "automotive",
-      label: "C63 - LEICA Q1"
+      src:   "photos/street/002.jpg",
+      cat:   "street",
+      label: "The Louis — LEICA Q1"
+    },
+    {
+      src:   "photos/street/003.jpg",
+      cat:   "street",
+      label: "HK Highway — LEICA Q1"
+    },
+    {
+      src:   "photos/street/004.jpg",
+      cat:   "street",
+      label: "WuKang Building — LEICA Q1"
     },
 
   ];
 
-  /* ── STATE ─────────────────────────────────────────── */
-  let userPhotos   = [];   // photos added via the upload button
-  let curFilter    = 'all';
-  let lbIndex      = 0;    // which photo is open in lightbox
-  let lbList       = [];   // current filtered list (for prev/next)
+  let userPhotos = [];
+  let curFilter  = 'all';
+  let lbIndex    = 0;
+  let lbList     = [];
 
-  /* ── GRID ──────────────────────────────────────────── */
   function allPhotos() { return [...photos, ...userPhotos]; }
 
   function filtered(cat) {
@@ -637,7 +609,6 @@
         <div class="grid-overlay"><span>${p.label}</span></div>
       </div>
     `).join('');
-    /* mark already-cached images as loaded immediately */
     grid.querySelectorAll('img').forEach(img => {
       if (img.complete) img.classList.add('loaded');
     });
@@ -650,7 +621,6 @@
     renderGrid(cat);
   }
 
-  /* ── LIGHTBOX ───────────────────────────────────────── */
   function openLb(i) {
     lbIndex = i;
     updateLb();
@@ -659,7 +629,7 @@
 
   function updateLb() {
     const p = lbList[lbIndex];
-    document.getElementById('lb-img').src       = p.src;
+    document.getElementById('lb-img').src = p.src;
     document.getElementById('lb-caption').textContent = p.label;
   }
 
@@ -676,7 +646,6 @@
     if (e.target === document.getElementById('lightbox')) closeLb();
   }
 
-  /* keyboard nav */
   document.addEventListener('keydown', e => {
     if (!document.getElementById('lightbox').classList.contains('open')) return;
     if (e.key === 'ArrowLeft')  lbStep(-1);
@@ -684,29 +653,6 @@
     if (e.key === 'Escape')     closeLb();
   });
 
-  /* ── UPLOAD ─────────────────────────────────────────── */
-  function handleUpload(e) {
-    Array.from(e.target.files).forEach(file => {
-      const url = URL.createObjectURL(file);
-      const name = file.name.replace(/\.\w+$/, '');
-      userPhotos.push({ src: url, cat: 'portrait', label: name });
-    });
-    renderGrid(curFilter);
-    e.target.value = '';
-  }
-
-  /* drag & drop onto the upload zone */
-  const uploadZone = document.querySelector('.upload-zone');
-  uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.style.borderColor = '#2a2016'; });
-  uploadZone.addEventListener('dragleave', () => { uploadZone.style.borderColor = ''; });
-  uploadZone.addEventListener('drop', e => {
-    e.preventDefault();
-    uploadZone.style.borderColor = '';
-    const fakeEvent = { target: { files: e.dataTransfer.files, value: '' } };
-    handleUpload(fakeEvent);
-  });
-
-  /* ── PAGE SWITCHING ─────────────────────────────────── */
   function showPage(id) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
@@ -715,14 +661,16 @@
     window.scrollTo(0, 0);
   }
 
-  /* ── INIT ───────────────────────────────────────────── */
+  /* ── CURTAIN ── */
+  const curtain = document.getElementById('curtain');
+  curtain.addEventListener('click', () => {
+    curtain.classList.add('open');
+    setTimeout(() => curtain.classList.add('done'), 1500);
+  });
+
+  /* ── INIT ── */
   document.getElementById('yr').textContent = new Date().getFullYear();
   renderGrid('all');
-  const curtain = document.getElementById('curtain');
-curtain.addEventListener('click', () => {
-  curtain.classList.add('open');
-  setTimeout(() => curtain.classList.add('done'), 1500);
-});
 </script>
 </body>
 </html>
