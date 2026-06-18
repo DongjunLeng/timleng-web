@@ -163,12 +163,17 @@
       cursor: pointer;
       position: relative;
       overflow: hidden;
+      background: #e8e0d0;
     }
     .grid-item img {
       width: 100%;
       display: block;
       filter: var(--film);
-      transition: transform 0.42s ease;
+      transition: transform 0.42s ease, opacity 0.3s ease;
+      opacity: 0;
+    }
+    .grid-item img.loaded {
+      opacity: 1;
     }
     .grid-item:hover img { transform: scale(1.04); }
 
@@ -589,10 +594,14 @@
     const grid = document.getElementById('photo-grid');
     grid.innerHTML = lbList.map((p, i) => `
       <div class="grid-item" onclick="openLb(${i})">
-        <img src="${p.src}" alt="${p.label}" loading="lazy">
+        <img src="${p.src}" alt="${p.label}" onload="this.classList.add('loaded')">
         <div class="grid-overlay"><span>${p.label}</span></div>
       </div>
     `).join('');
+    /* mark already-cached images as loaded immediately */
+    grid.querySelectorAll('img').forEach(img => {
+      if (img.complete) img.classList.add('loaded');
+    });
   }
 
   function filter(cat, btn) {
