@@ -669,7 +669,7 @@
 
   /* ── INIT ───────────────────────────────────────────── */
   document.getElementById('yr').textContent = new Date().getFullYear();
-  renderGrid('all');
+  requestAnimationFrame(() => renderGrid('all'));
 </script>
 </body>
 </html>
