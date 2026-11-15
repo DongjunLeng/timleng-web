@@ -644,7 +644,7 @@
     .then(entries => {
       const activePhoto = lbList[lbIndex]?.src;
       userPhotos = entries.filter(entry => /^https:\/\/img\.yor1e\.com\/[a-f0-9-]{36}\.webp$/.test(entry.src))
-        .map(entry => ({ src: entry.src, cat: entry.cat, label: entry.title + ' — FUJI X100VI' }));
+        .map(entry => ({ src: entry.src, cat: entry.cat, label: entry.title + ' — ' + (entry.camera || 'FUJI X100VI') }));
       renderGrid(curFilter);
       const matchingIndex = lbList.findIndex(photo => photo.src === activePhoto);
       if (matchingIndex >= 0) lbIndex = matchingIndex;
