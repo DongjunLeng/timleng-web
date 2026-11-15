@@ -559,7 +559,7 @@
   let lbIndex    = 0;
   let lbList     = [];
 
-  function allPhotos() { return [...photos, ...userPhotos]; }
+  function allPhotos() { return [...userPhotos, ...photos]; }
 
   function filtered(cat) {
     return cat === 'all' ? allPhotos() : allPhotos().filter(p => p.cat === cat);
@@ -568,15 +568,22 @@
   function renderGrid(cat) {
     lbList = filtered(cat);
     const grid = document.getElementById('photo-grid');
-    grid.innerHTML = lbList.map((p, i) => `
-      <div class="grid-item" onclick="openLb(${i})">
-        <img src="${p.src}" alt="${p.label}" onload="this.classList.add('loaded')">
-        <div class="grid-overlay"><span>${p.label}</span></div>
-      </div>
-    `).join('');
-    grid.querySelectorAll('img').forEach(img => {
-      if (img.complete) img.classList.add('loaded');
-    });
+    grid.replaceChildren(...lbList.map((photo, index) => {
+      const item = document.createElement('div');
+      item.className = 'grid-item';
+      item.addEventListener('click', () => openLb(index));
+      const image = document.createElement('img');
+      image.alt = photo.label;
+      image.addEventListener('load', () => image.classList.add('loaded'));
+      image.src = photo.src;
+      const overlay = document.createElement('div');
+      overlay.className = 'grid-overlay';
+      const label = document.createElement('span');
+      label.textContent = photo.label;
+      overlay.append(label);
+      item.append(image, overlay);
+      return item;
+    }));
   }
 
   function filter(cat, btn) {
@@ -628,7 +635,21 @@
 
   /* ── INIT ── */
   document.getElementById('yr').textContent = new Date().getFullYear();
-  requestAnimationFrame(() => renderGrid('all'));
+  requestAnimationFrame(() => renderGrid(curFilter));
+  fetch('https://img.yor1e.com/gallery.json')
+    .then(response => {
+      if (!response.ok) throw new Error('Photo feed unavailable');
+      return response.json();
+    })
+    .then(entries => {
+      const activePhoto = lbList[lbIndex]?.src;
+      userPhotos = entries.filter(entry => /^https:\/\/img\.yor1e\.com\/[a-f0-9-]{36}\.webp$/.test(entry.src))
+        .map(entry => ({ src: entry.src, cat: entry.cat, label: entry.title + ' — FUJI X100VI' }));
+      renderGrid(curFilter);
+      const matchingIndex = lbList.findIndex(photo => photo.src === activePhoto);
+      if (matchingIndex >= 0) lbIndex = matchingIndex;
+    })
+    .catch(() => {});
 </script>
 </body>
 </html>
